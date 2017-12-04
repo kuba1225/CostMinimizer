@@ -7,13 +7,13 @@ package dynamicstructures;
 public class Farm {
 
     private int id;
-    private String nazwa;
-    private int dzienna_produkcja;
+    private String name;
+    private int dailyProductions;
 
     public Farm(int id, String nazwa, int dzienna_produkcja) {
         this.id = id;
-        this.nazwa = nazwa;
-        this.dzienna_produkcja = dzienna_produkcja;
+        this.name = nazwa;
+        this.dailyProductions = dzienna_produkcja;
     }
 
     public int getId() {
@@ -21,12 +21,10 @@ public class Farm {
     }
 
     public String getNazwa() {
-        return nazwa;
+        return name;
     }
 
     public int getDzienna_produkcja() {
-        return dzienna_produkcja;
+        return dailyProductions;
     }
-    
-    
 }

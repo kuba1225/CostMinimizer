@@ -38,5 +38,4 @@ public class Graph {
     public int getCost() {
         return cost;
     }
-
 }

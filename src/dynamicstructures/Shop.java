@@ -7,13 +7,13 @@ package dynamicstructures;
 public class Shop {
 
     private int id;
-    private String nazwa;
-    private int dzienne_zapotrzebowanie;
+    private String name;
+    private int dailyDemands;
 
     public Shop(int id, String nazwa, int dzienne_zapotrzebowanie) {
         this.id = id;
-        this.nazwa = nazwa;
-        this.dzienne_zapotrzebowanie = dzienne_zapotrzebowanie;
+        this.name = nazwa;
+        this.dailyDemands = dzienne_zapotrzebowanie;
     }
 
     public int getId() {
@@ -21,11 +21,10 @@ public class Shop {
     }
 
     public String getNazwa() {
-        return nazwa;
+        return name;
     }
 
     public int getDzienne_zapotrzebowanie() {
-        return dzienne_zapotrzebowanie;
+        return dailyDemands;
     }
-    
 }

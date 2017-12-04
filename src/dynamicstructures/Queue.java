@@ -6,7 +6,7 @@ import java.util.NoSuchElementException;
  *
  * @author Kuba
  */
-public class Queue implements QueueInterface{
+public class Queue implements QueueInterface {
 
     private class QElement {
 
@@ -29,6 +29,7 @@ public class Queue implements QueueInterface{
      *
      * @return zwraca true jeżeli kolejka jest pusta
      */
+    @Override
     public boolean empty() {
         return (head == null);
     }
@@ -38,6 +39,7 @@ public class Queue implements QueueInterface{
      *
      * @return wartość pierwszego elementu w kolejce
      */
+    @Override
     public int front() {
         if (head != null) {
             return head.data;
@@ -51,6 +53,7 @@ public class Queue implements QueueInterface{
      *
      * @param v element dodawany do kolejki
      */
+    @Override
     public void push(int v) {
         QElement p = new QElement();
         p.next = null;
@@ -69,6 +72,7 @@ public class Queue implements QueueInterface{
      *
      * @return wartość przechowywaną w usuwanym elemencie
      */
+    @Override
     public int pop() {
         if (head != null) {
             QElement p = head;
@@ -88,6 +92,7 @@ public class Queue implements QueueInterface{
      *
      * @return liczba elementó w kolejce
      */
+    @Override
     public int size() {
         return elementsNumber;
     }

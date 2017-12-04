@@ -1,9 +1,5 @@
 package iocommunication;
 
-/**
- *
- * @author Kuba
- */
 import static costminimizer.CostMinimizer.*;
 import dynamicstructures.*;
 import java.io.BufferedReader;
@@ -27,95 +23,88 @@ public class Parser {
         this.filename = filename;
     }
 
-    public void readFile() {
+    public void readFile() throws FileNotFoundException, IOException, NumberFormatException {
 
         Scanner sc = null;
         BufferedReader br = null;
 
-        try {
-            validateFile();
+        validateFile();
 
-            br = new BufferedReader(new FileReader(filename));
-            String line;
+        br = new BufferedReader(new FileReader(filename));
+        String line;
 
-            line = br.readLine();
+        line = br.readLine();
 
-            findMatrixSize();
+        findMatrixSize();
 
-            matrixShopsOrders = new Matrix(1, cn);
-            matrixFermsNumberEggs = new Matrix(rn, 1);
+        matrixShopsOrders = new Matrix(1, cn);
+        matrixFermsNumberEggs = new Matrix(rn, 1);
 
-            int fermKey = 0;
-            int idFerm = 0;
-            String nameFerm = "";
-            int dailyProduction = 0;
+        int fermKey = 0;
+        int idFerm = 0;
+        String nameFerm = "";
+        int dailyProduction = 0;
 
-            //# Fermy drobiu (id | nazwa | dzienna produkcja)
-            while (((line = br.readLine()) != null) && (!(line.replaceAll("\\s", "").charAt(0) == '#'))) {
-                idFerm = 0;
-                nameFerm = "";
-                dailyProduction = 0;
+        //# Fermy drobiu (id | nazwa | dzienna produkcja)
+        while (((line = br.readLine()) != null) && (!(line.replaceAll("\\s", "").charAt(0) == '#'))) {
+            idFerm = 0;
+            nameFerm = "";
+            dailyProduction = 0;
 
-                sc = new Scanner(line);
-                if (sc.hasNextInt()) {
-                    idFerm = sc.nextInt();
-                }
-                while (!sc.hasNextInt()) {
-                    nameFerm += sc.next() + " ";
-                }
-                if (sc.hasNextInt()) {
-                    dailyProduction = sc.nextInt();
-                }
-                farm.setValue(fermKey, new Farm(idFerm, nameFerm, dailyProduction));
-                matrixFermsNumberEggs.add(dailyProduction, fermKey, 0);
-                fermKey++;
+            sc = new Scanner(line);
+            if (sc.hasNextInt()) {
+                idFerm = sc.nextInt();
             }
-
-            int x = 0;
-            int idShop = 0;
-            String nameShop = "";
-            int dailyDemand = 0;
-
-            //# Sklep (id | nazwa | dzienne zapotrzebowanie)
-            while (((line = br.readLine()) != null) && (!(line.replaceAll("\\s", "").charAt(0) == '#'))) {
-                idShop = 0;
-                nameShop = "";
-                dailyDemand = 0;
-
-                sc = new Scanner(line);
-                if (sc.hasNextInt()) {
-                    idShop = sc.nextInt();
-                }
-                while (!sc.hasNextInt()) {
-                    nameShop += sc.next() + " ";
-                }
-                if (sc.hasNextInt()) {
-                    dailyDemand = sc.nextInt();
-                }
-                shop.setValue(x, new Shop(idShop, nameShop, dailyDemand));
-                matrixShopsOrders.add(dailyDemand, 0, x);
-                x++;
+            while (!sc.hasNextInt()) {
+                nameFerm += sc.next() + " ";
             }
-
-            matrixConstraints = new Matrix(rn, cn);
-            matrixCosts = new Matrix(rn, cn);
-
-            //# Połączenia ferm i sklepów (id_fermy | id_sklepu | dzienna_maksymalna_liczba_przewożonych_jaj | koszt_przewozu_jednego_jaja)
-            while (((line = br.readLine()) != null) && (!(line.replaceAll("\\s", "").charAt(0) == '#'))) {
-                String[] wrds = line.split("\\s+");
-                matrixConstraints.put(Integer.parseInt(wrds[2]), Integer.parseInt(wrds[0]), Integer.parseInt(wrds[1]));
-                matrixCosts.put(Integer.parseInt(wrds[3]), Integer.parseInt(wrds[0]), Integer.parseInt(wrds[1]));
+            if (sc.hasNextInt()) {
+                dailyProduction = sc.nextInt();
             }
-
-            br.close();
-            sc.close();
-        } catch (FileNotFoundException ex) {
-            System.err.println("NIEUDANA PRÓBA OTWARCIA PLIKU \"" + filename + "\"");
-        } catch (IOException ex) {
-            System.err.println("NIEZNANY BŁĄD ZWIĄZANY Z OBSŁUGĄ PLIKU \"" + filename + "\"");
-        } catch (NumberFormatException ex) {
-            System.err.println(ex.getMessage());
+            farm.setValue(fermKey, new Farm(idFerm, nameFerm, dailyProduction));
+            matrixFermsNumberEggs.add(dailyProduction, fermKey, 0);
+            fermKey++;
         }
+
+        int x = 0;
+        int idShop = 0;
+        String nameShop = "";
+        int dailyDemand = 0;
+
+        //# Sklep (id | nazwa | dzienne zapotrzebowanie)
+        while (((line = br.readLine()) != null) && (!(line.replaceAll("\\s", "").charAt(0) == '#'))) {
+            idShop = 0;
+            nameShop = "";
+            dailyDemand = 0;
+
+            sc = new Scanner(line);
+            if (sc.hasNextInt()) {
+                idShop = sc.nextInt();
+            }
+            while (!sc.hasNextInt()) {
+                nameShop += sc.next() + " ";
+            }
+            if (sc.hasNextInt()) {
+                dailyDemand = sc.nextInt();
+            }
+            shop.setValue(x, new Shop(idShop, nameShop, dailyDemand));
+            matrixShopsOrders.add(dailyDemand, 0, x);
+            x++;
+        }
+
+        matrixConstraints = new Matrix(rn, cn);
+        matrixCosts = new Matrix(rn, cn);
+
+        //# Połączenia ferm i sklepów (id_fermy | id_sklepu | dzienna_maksymalna_liczba_przewożonych_jaj | koszt_przewozu_jednego_jaja)
+        while (((line = br.readLine()) != null) && (!(line.replaceAll("\\s", "").charAt(0) == '#'))) {
+            String[] wrds = line.split("\\s+");
+            matrixConstraints.put(Integer.parseInt(wrds[2]), Integer.parseInt(wrds[0]), Integer.parseInt(wrds[1]));
+            matrixCosts.put(Integer.parseInt(wrds[3]), Integer.parseInt(wrds[0]), Integer.parseInt(wrds[1]));
+        }
+
+        br.close();
+        sc.close();
+
 
         /*System.out.println("matrixFermsNumberEggs");
         matrixFermsNumberEggs.writeMatrix();

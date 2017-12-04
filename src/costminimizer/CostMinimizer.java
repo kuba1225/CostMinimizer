@@ -1,11 +1,12 @@
 package costminimizer;
 
-import algorithms.BellmanFordAlgorithm;
-import algorithms.EdmondsKarpAlgorithm;
+import algorithms.*;
 import dynamicstructures.*;
-import iocommunication.Parser;
-import iocommunication.Writer;
+import iocommunication.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  *
@@ -27,28 +28,102 @@ public class CostMinimizer {
         residualGraph = new ArrayList<>();
     }
 
-    public void minimizeCost() {
+    public void minimizeCost(String filename) throws FileNotFoundException, IOException, NumberFormatException {
         CostMinimizer c = new CostMinimizer();
-        Parser r = new Parser("test.txt");
+        Parser r = new Parser(filename);
+
         r.readFile();
+
         EdmondsKarpAlgorithm e = new EdmondsKarpAlgorithm();
-        System.out.println("Przetwarzanie grafu algorytmem Edmondsa-Karpa...");
         e.edmondsKarp();
         BellmanFordAlgorithm bf = new BellmanFordAlgorithm();
-        System.out.println("Przetwarzanie grafu algorytmem Bellmana-Forda...");
-        //bf.bellmanFordAlgorithm();
-        System.out.println("Suma całkowita kosztów przed usuwaniem ujemnych cykli to: " + bf.obliczSume() + " $");
+        bf.bellmanFordAlgorithm();
         while (!bf.bellmanFordAlgorithm()) {
             bf.usunUjemnyCykl();
         }
-        Writer w = new Writer();
-        w.wypiszOptymalneRozwiazanie();
-        System.out.println("Suma całkowita kosztów po usunięciu ujemych cykli to: " + bf.obliczSume() + " $");
     }
 
     public static void main(String[] argv) {
         CostMinimizer c = new CostMinimizer();
-        c.minimizeCost();
+        Writer w = new Writer();
+        int destination = 1;
+        String destinationFileName = null;
+        System.out.println("CostMinimizer");
+        System.out.println("Wpisz \"menu\" - aby wyswietlic menu, \"quit\" - aby wyjsc");
+        c.showMenu();
+
+        Scanner sc = new Scanner(System.in);
+        String s;
+        System.out.printf("<CostMinimizer> ");
+        while (!(s = sc.nextLine()).equals("quit")) {
+            if (s.equals("menu")) {
+                c.showMenu();
+            } else if (s.equals("1")) {
+                System.out.printf("Podaj lokalizacje pliku z danymi wejściowymi: ");
+                s = sc.nextLine();
+                try {
+                    c.minimizeCost(s);
+
+                    if (destination == 1) {
+                        w.writeResultsToStdOut();
+                    } else if (destination == 2) {
+                        try {
+                            w.writeResultsToFile(destinationFileName);
+                        } catch (FileNotFoundException ex) {
+                            System.err.println("NIEUDANA PRÓBA OTWARCIA PLIKU \"" + destinationFileName + "\"");
+                        }
+                    } else if (destination == 3) {
+                        w.writeResultsToStdOut();
+                        try {
+                            w.writeResultsToFile(destinationFileName);
+                        } catch (FileNotFoundException ex) {
+                            System.err.println("NIEUDANA PRÓBA OTWARCIA PLIKU \"" + destinationFileName + "\"");
+                        }
+                    }
+                } catch (FileNotFoundException ex) {
+                    System.err.println("NIEUDANA PRÓBA OTWARCIA PLIKU \"" + s + "\"");
+                } catch (IOException ex) {
+                    System.err.println("NIEZNANY BŁĄD ZWIĄZANY Z OBSŁUGĄ PLIKU \"" + s + "\"");
+                } catch (NumberFormatException ex) {
+                    System.err.println(ex.getMessage());
+                }
+            } else if (s.equals("2")) {
+                while (true) {
+                    c.choseOutput();
+                    System.out.printf("<CostMinimizer> ");
+                    s = sc.nextLine();
+
+                    if (s.equals("1")) {
+                        destination = 1;
+                        break;
+                    } else if (s.equals("2")) {
+                        destination = 2;
+                        System.out.print("Podaj nazwe pliku: ");
+                        destinationFileName = sc.nextLine();
+                        break;
+                    } else if (s.equals("3")) {
+                        destination = 3;
+                        System.out.print("Podaj nazwe pliku: ");
+                        destinationFileName = sc.nextLine();
+                        break;
+                    } else if (s.equals("quit")) {
+                        break;
+                    }
+                }
+            }
+            System.out.printf("<CostMinimizer> ");
+        }
     }
 
+    public void showMenu() {
+        System.out.println("\nMenu");
+        System.out.println("1.Wyznacz kursy dostaw.");
+        System.out.println("2.Wybierz lokalizacje danych wyjsciowych.\n");
+    }
+
+    public void choseOutput() {
+        System.out.println("\n1.Wyswietl dane wyjsciowe w kompilatorze.");
+        System.out.println("2.Zapisz dane wyjsiowe w pliku.");
+        System.out.println("3.Wyswietl dane wyjsciowe w kompilatorze oraz zapisz dane wyjsciowe w pliku.\n");
+    }
 }

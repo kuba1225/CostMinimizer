@@ -4,7 +4,6 @@ package dynamicstructures;
  *
  * @author Kuba
  */
-
 public class RedBlackTree<K extends Comparable<K>, V> implements MapInterface<K, V> {
 
     private static final boolean BLACK = false;
