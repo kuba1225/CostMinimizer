@@ -10,6 +10,12 @@ import dynamicstructures.*;
 public class EdmondsKarpAlgorithm {
 
     public static final int MAXINT = Integer.MAX_VALUE;
+    int edges, verticles;                   //liczba krawędzi i wierzchołków
+    verticleElement[] neighboursArray;      //tablica list sąsiedztwa
+    Queue queue;
+    int startVerticle, finalVerticle;       //wierzchołki źródła i ujścia
+    int[] previousElementArray;             //tablica poprzedników
+    int[] capacityResidualFlowArray;        //tablica przepustowości rezydualnych
 
     private class verticleElement {
 
@@ -20,61 +26,12 @@ public class EdmondsKarpAlgorithm {
     };
 
     public void edmondsKarp() {
-        int edges, verticles;                   //liczba krawędzi i wierzchołków
-        verticleElement[] neighboursArray;      //tablica list sąsiedztwa
-        int startVerticle, finalVerticle;                               //wierzchołki źródła i ujścia
-        Queue queue = new Queue();
-        int[] previousElementArray;             //tablica poprzedników
-        int[] capacityResidualFlowArray;        //tablica przepustowości rezydualnych
+        queue = new Queue();
         int cp, u, v;
-        verticleElement x, z;                   //wskaźniki elementów listy sąsiedztwa
+        verticleElement x, z;
         boolean testEdge = false;
 
-        //pobranie liczby wierzchołków i krawędzi
-        verticles = matrixConstraints.getColumnNumber() + matrixConstraints.getRowNumber() + 2;
-        edges = matrixConstraints.getColumnNumber() * matrixConstraints.getRowNumber() + (matrixConstraints.getColumnNumber() + matrixConstraints.getRowNumber());
-
-        startVerticle = 0;              //wierzchołek źródła
-        finalVerticle = verticles - 1;  //wierzchołek ujścia
-
-        neighboursArray = new verticleElement[verticles];
-        for (int i = 0; i < verticles; i++) {
-            neighboursArray[i] = null;          //tablicę sąsiedztwa na początku należy wypełnić pustymi listami
-        }
-        previousElementArray = new int[verticles];
-        capacityResidualFlowArray = new int[verticles];
-
-        //~~~~~~~~~~~~~~~~~~~~~~~~~~WCZYTYWANIE DANYCH~~~~~~~~~~~~~~~~~~~~~~~~~~
-        for (int it = 0; it < matrixConstraints.getRowNumber(); it++) {
-            for (int jt = 0; jt < matrixConstraints.getColumnNumber(); jt++) {
-                x = new verticleElement();
-                x.nextVerticle = jt + matrixConstraints.getRowNumber() + 1;
-                x.constraints = (int) matrixConstraints.get(it, jt);
-                x.flow = 0;
-                x.next = neighboursArray[it + 1];
-                neighboursArray[it + 1] = x;
-            }
-        }
-
-        for (int it = 0; it < matrixConstraints.getRowNumber(); it++) {
-            x = new verticleElement();
-            x.nextVerticle = it + 1;
-            x.constraints = (int) matrixFermsNumberEggs.get(it, 0);
-            x.flow = 0;
-            x.next = neighboursArray[0];
-            neighboursArray[0] = x;
-
-        }
-
-        for (int it = 0; it < matrixConstraints.getColumnNumber(); it++) {
-            x = new verticleElement();
-            x.nextVerticle = matrixConstraints.getColumnNumber() + matrixConstraints.getRowNumber() + 1;
-            x.constraints = (int) matrixShopsOrders.get(0, it);
-            x.flow = 0;
-            x.next = neighboursArray[it + matrixConstraints.getRowNumber() + 1];
-            neighboursArray[it + matrixConstraints.getRowNumber() + 1] = x;
-
-        }
+        loadData();
 
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         //~~~~~~~~~~~~~~~~~~~~~Tworzenie grafu rezydualnego~~~~~~~~~~~~~~~~~~~~~
@@ -169,6 +126,55 @@ public class EdmondsKarpAlgorithm {
 
     }
 
+    public void loadData() {
+        verticleElement x;
+        //pobranie liczby wierzchołków i krawędzi
+        verticles = matrixConstraints.getColumnNumber() + matrixConstraints.getRowNumber() + 2;
+        edges = matrixConstraints.getColumnNumber() * matrixConstraints.getRowNumber() + (matrixConstraints.getColumnNumber() + matrixConstraints.getRowNumber());
+
+        startVerticle = 0;              //wierzchołek źródła
+        finalVerticle = verticles - 1;  //wierzchołek ujścia
+
+        neighboursArray = new verticleElement[verticles];
+        for (int i = 0; i < verticles; i++) {
+            neighboursArray[i] = null;          //tablicę sąsiedztwa na początku należy wypełnić pustymi listami
+        }
+        previousElementArray = new int[verticles];
+        capacityResidualFlowArray = new int[verticles];
+
+        //~~~~~~~~~~~~~~~~~~~~~~~~~~WCZYTYWANIE DANYCH~~~~~~~~~~~~~~~~~~~~~~~~~~
+        for (int it = 0; it < matrixConstraints.getRowNumber(); it++) {
+            for (int jt = 0; jt < matrixConstraints.getColumnNumber(); jt++) {
+                x = new verticleElement();
+                x.nextVerticle = jt + matrixConstraints.getRowNumber() + 1;
+                x.constraints = (int) matrixConstraints.get(it, jt);
+                x.flow = 0;
+                x.next = neighboursArray[it + 1];
+                neighboursArray[it + 1] = x;
+            }
+        }
+
+        for (int it = 0; it < matrixConstraints.getRowNumber(); it++) {
+            x = new verticleElement();
+            x.nextVerticle = it + 1;
+            x.constraints = (int) matrixFermsNumberEggs.get(it, 0);
+            x.flow = 0;
+            x.next = neighboursArray[0];
+            neighboursArray[0] = x;
+
+        }
+
+        for (int it = 0; it < matrixConstraints.getColumnNumber(); it++) {
+            x = new verticleElement();
+            x.nextVerticle = matrixConstraints.getColumnNumber() + matrixConstraints.getRowNumber() + 1;
+            x.constraints = (int) matrixShopsOrders.get(0, it);
+            x.flow = 0;
+            x.next = neighboursArray[it + matrixConstraints.getRowNumber() + 1];
+            neighboursArray[it + matrixConstraints.getRowNumber() + 1] = x;
+
+        }
+    }
+
     public void constructResidualGraph(verticleElement[] neighboursArray, int n) {
         Graph g;
         verticleElement x, z;
@@ -218,7 +224,6 @@ public class EdmondsKarpAlgorithm {
                             residualGraph.add(g);
                         }
                     }
-
                 }
             }
         }
