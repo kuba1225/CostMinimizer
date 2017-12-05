@@ -32,7 +32,7 @@ public class Parser {
 
         validateFile();
 
-        br = new BufferedReader(new FileReader(filename));
+        br = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "UTF-8"));
         String line;
 
         line = br.readLine();
