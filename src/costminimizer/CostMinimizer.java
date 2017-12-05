@@ -45,24 +45,26 @@ public class CostMinimizer {
     }
 
     public static void main(String[] argv) {
-        CostMinimizer c = new CostMinimizer();
+        CostMinimizer c;
+        UserInterface ui = new UserInterface();
         Writer w = new Writer();
         int destination = 1;
         String destinationFileName = null;
         System.out.println("CostMinimizer");
         System.out.println("Wpisz \"menu\" - aby wyswietlic menu, \"quit\" - aby wyjsc");
-        c.showMenu();
+        ui.showMenu();
 
         Scanner sc = new Scanner(System.in);
         String s;
         System.out.printf("<CostMinimizer> ");
         while (!(s = sc.nextLine()).equals("quit")) {
             if (s.equals("menu")) {
-                c.showMenu();
+                ui.showMenu();
             } else if (s.equals("1")) {
                 System.out.printf("Podaj lokalizacje pliku z danymi wejściowymi: ");
                 s = sc.nextLine();
                 try {
+                    c = new CostMinimizer();
                     c.minimizeCost(s);
 
                     if (destination == 1) {
@@ -90,7 +92,7 @@ public class CostMinimizer {
                 }
             } else if (s.equals("2")) {
                 while (true) {
-                    c.choseOutput();
+                    ui.choseOutput();
                     System.out.printf("<CostMinimizer> ");
                     s = sc.nextLine();
 
@@ -114,17 +116,5 @@ public class CostMinimizer {
             }
             System.out.printf("<CostMinimizer> ");
         }
-    }
-
-    public void showMenu() {
-        System.out.println("\nMenu");
-        System.out.println("1.Wyznacz kursy dostaw.");
-        System.out.println("2.Wybierz lokalizacje danych wyjsciowych.\n");
-    }
-
-    public void choseOutput() {
-        System.out.println("\n1.Wyswietl dane wyjsciowe w kompilatorze.");
-        System.out.println("2.Zapisz dane wyjsiowe w pliku.");
-        System.out.println("3.Wyswietl dane wyjsciowe w kompilatorze oraz zapisz dane wyjsciowe w pliku.\n");
     }
 }

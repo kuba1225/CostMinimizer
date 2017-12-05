@@ -17,6 +17,7 @@ public class Writer {
         int liczbaFerm = matrixConstraints.getRowNumber();
         int licbaSklepow = matrixConstraints.getColumnNumber();
         Tools t = new Tools();
+        int eggsNumber = 0;
 
         System.out.println();
         for (int i = liczbaFerm + 1; i <= licbaSklepow + liczbaFerm; i++) {
@@ -31,10 +32,12 @@ public class Writer {
                     shop.getValue(to);
 
                     System.out.printf("%-50s -> \t%-50s [Suma = %d * %d = %d]\n", farm.getValue(to - 1).getNazwa(), shop.getValue(from - liczbaFerm - 1).getNazwa(), abs(flow), abs(cost), (abs(flow * cost)));
+                    eggsNumber += abs(flow);
                 }
             }
         }
         System.out.println("\nCałkowita suma kosztów: " + t.returnSumOfCosts() + " $\n");
+        System.out.println("\nLiczbajaj: " + eggsNumber + "\n");
     }
 
     public void writeResultsToFile(String nazwaPliku) throws FileNotFoundException {
@@ -42,6 +45,7 @@ public class Writer {
         int liczbaFerm = matrixConstraints.getRowNumber();
         int licbaSklepow = matrixConstraints.getColumnNumber();
         Tools t = new Tools();
+        int eggsNumber = 0;
 
         PrintWriter p = new PrintWriter(nazwaPliku);
 
@@ -57,10 +61,12 @@ public class Writer {
                     shop.getValue(to);
 
                     p.printf("%-50s -> \t%-50s [Suma = %d * %d = %d]\n", farm.getValue(to - 1).getNazwa(), shop.getValue(from - liczbaFerm - 1).getNazwa(), abs(flow), abs(cost), (abs(flow * cost)));
+                    eggsNumber += abs(flow);
                 }
             }
         }
         p.println("\nCałkowita suma kosztów: " + t.returnSumOfCosts() + " $\n");
+        p.println("\nLiczbajaj: " + eggsNumber + "\n");
         p.close();
     }
 

@@ -46,6 +46,7 @@ public class Parser {
         int idFerm = 0;
         String nameFerm = "";
         int dailyProduction = 0;
+        //int sumOfDailyProduction = 0;
 
         //# Fermy drobiu (id | nazwa | dzienna produkcja)
         while (((line = br.readLine()) != null) && (!(line.replaceAll("\\s", "").charAt(0) == '#'))) {
@@ -65,9 +66,11 @@ public class Parser {
             }
             farm.setValue(fermKey, new Farm(idFerm, nameFerm, dailyProduction));
             matrixFermsNumberEggs.add(dailyProduction, fermKey, 0);
+            //sumOfDailyProduction += dailyProduction;
             fermKey++;
         }
 
+        //System.out.println("sumOfDailyProduction = " + sumOfDailyProduction);
         int x = 0;
         int idShop = 0;
         String nameShop = "";
