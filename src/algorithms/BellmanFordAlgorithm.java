@@ -56,82 +56,6 @@ public class BellmanFordAlgorithm {
         return bellmanFord(0);
     }
 
-    public boolean bellmanFord(int startVerticle) {//startVerticle - wierzchołek początkowy
-        int i, x;
-        boolean noChanges;
-        verticleElement pv;
-
-        costArray[startVerticle] = 0;//wyzerowanie kosztu dojścia do wierzchołka początkowego
-        for (i = 1; i < verticles; i++) {
-            noChanges = true;//brak zmian w tablicach kosztów i poprzedników
-            for (x = 0; x < verticles; x++) {
-                for (pv = A[x]; pv != null; pv = pv.next)//przechodzimy po wszystkich sąsiadach listy wierzchołka x
-                {
-                    if (costArray[pv.nextVerticle] > costArray[x] + pv.cost)//warunek relaksacji
-                    {
-                        noChanges = false;//jest zmiana w tablicach kosztów i poprzedników
-                        costArray[pv.nextVerticle] = costArray[x] + pv.cost; //relaksacja krawędzi z x do sąsiada
-                        previousElementArray[pv.nextVerticle] = x;           //ustawiamy wierzchołek x jako poprzednik sąsiada
-                    }
-                }
-            }
-            if (noChanges) {
-                return true;         //brak zmian -> koniec
-            }
-        }
-
-        // Sprawdzamy istnienie ujemnego cyklu
-        for (x = 0; x < verticles; x++) {
-            for (pv = A[x]; pv != null; pv = pv.next) {
-                if (costArray[pv.nextVerticle] > costArray[x] + pv.cost) {//sprawdzamy czy istnieją krawędzie nie spełniające warunku relaksacji
-                    //wypisz_ujemny_cykl(A, pv, d);
-                    findNegativeCycle(pv.nextVerticle);
-                    return false; //false oznacza znalezienie ujemnego cyklu
-                }
-            }
-        }
-        return true;
-    }
-
-    public void findNegativeCycle(int z) {
-        negativeCycle.clear();
-
-        char[] colors = new char[verticles];
-        for (int i = 0; i < verticles; i++) {
-            colors[i] = 'w';//kolorujemy wszystkie węzły na biały kolor
-        }
-        int start = z;
-        int poprzednik = previousElementArray[start];
-
-        negativeCycle.add(start);
-
-        colors[start] = 'g';//węzeł początkowy kolorujemy na kolor szary
-        while (colors[poprzednik] != 'g' && poprzednik >= 0) {//przeszukiwanie trwa do czasu gdy dojdziemy do węzła szarego
-            colors[poprzednik] = 'g';
-
-            negativeCycle.add(poprzednik);
-            poprzednik = previousElementArray[poprzednik];
-        }
-        negativeCycle.add(poprzednik);
-        Collections.reverse(negativeCycle);
-
-        int st = negativeCycle.get(0);
-
-        int rozmiar;
-
-        for (rozmiar = 1; rozmiar < negativeCycle.size(); rozmiar++) {
-            if (negativeCycle.get(rozmiar) == st) {
-                break;//upewniamy się że cykl ujemny jest zamknięty
-            }
-        }
-
-        rozmiar++;
-
-        for (; rozmiar < negativeCycle.size(); rozmiar++) {
-            negativeCycle.remove(rozmiar);//usuwamy z cyklu wszystkie krawędzie które są poza jego ,,zamknięciem''
-        }
-    }
-
     public void usunUjemnyCykl() {
         int x, y, f, c;
         int minFlow;
@@ -236,7 +160,83 @@ public class BellmanFordAlgorithm {
         }
     }
 
-    public int findMin(int[] x) {
+    private boolean bellmanFord(int startVerticle) {//startVerticle - wierzchołek początkowy
+        int i, x;
+        boolean noChanges;
+        verticleElement pv;
+
+        costArray[startVerticle] = 0;//wyzerowanie kosztu dojścia do wierzchołka początkowego
+        for (i = 1; i < verticles; i++) {
+            noChanges = true;//brak zmian w tablicach kosztów i poprzedników
+            for (x = 0; x < verticles; x++) {
+                for (pv = A[x]; pv != null; pv = pv.next)//przechodzimy po wszystkich sąsiadach listy wierzchołka x
+                {
+                    if (costArray[pv.nextVerticle] > costArray[x] + pv.cost)//warunek relaksacji
+                    {
+                        noChanges = false;//jest zmiana w tablicach kosztów i poprzedników
+                        costArray[pv.nextVerticle] = costArray[x] + pv.cost; //relaksacja krawędzi z x do sąsiada
+                        previousElementArray[pv.nextVerticle] = x;           //ustawiamy wierzchołek x jako poprzednik sąsiada
+                    }
+                }
+            }
+            if (noChanges) {
+                return true;         //brak zmian -> koniec
+            }
+        }
+
+        // Sprawdzamy istnienie ujemnego cyklu
+        for (x = 0; x < verticles; x++) {
+            for (pv = A[x]; pv != null; pv = pv.next) {
+                if (costArray[pv.nextVerticle] > costArray[x] + pv.cost) {//sprawdzamy czy istnieją krawędzie nie spełniające warunku relaksacji
+                    //wypisz_ujemny_cykl(A, pv, d);
+                    findNegativeCycle(pv.nextVerticle);
+                    return false; //false oznacza znalezienie ujemnego cyklu
+                }
+            }
+        }
+        return true;
+    }
+
+    private void findNegativeCycle(int z) {
+        negativeCycle.clear();
+
+        char[] colors = new char[verticles];
+        for (int i = 0; i < verticles; i++) {
+            colors[i] = 'w';//kolorujemy wszystkie węzły na biały kolor
+        }
+        int start = z;
+        int poprzednik = previousElementArray[start];
+
+        negativeCycle.add(start);
+
+        colors[start] = 'g';//węzeł początkowy kolorujemy na kolor szary
+        while (colors[poprzednik] != 'g' && poprzednik >= 0) {//przeszukiwanie trwa do czasu gdy dojdziemy do węzła szarego
+            colors[poprzednik] = 'g';
+
+            negativeCycle.add(poprzednik);
+            poprzednik = previousElementArray[poprzednik];
+        }
+        negativeCycle.add(poprzednik);
+        Collections.reverse(negativeCycle);
+
+        int st = negativeCycle.get(0);
+
+        int rozmiar;
+
+        for (rozmiar = 1; rozmiar < negativeCycle.size(); rozmiar++) {
+            if (negativeCycle.get(rozmiar) == st) {
+                break;//upewniamy się że cykl ujemny jest zamknięty
+            }
+        }
+
+        rozmiar++;
+
+        for (; rozmiar < negativeCycle.size(); rozmiar++) {
+            negativeCycle.remove(rozmiar);//usuwamy z cyklu wszystkie krawędzie które są poza jego ,,zamknięciem''
+        }
+    }
+
+    private int findMin(int[] x) {
         int min = Integer.MAX_VALUE;
         for (int i = 0; i < x.length; i++) {
             if (x[i] < min && x[i] > 0) {
@@ -247,7 +247,7 @@ public class BellmanFordAlgorithm {
         return min;
     }
 
-    public void writeNegativeCycle() {
+    private void writeNegativeCycle() {
         int j = 0;
         System.out.println("~~~~~~NegativeCycle~~~~~~~~");
         for (int i : negativeCycle) {

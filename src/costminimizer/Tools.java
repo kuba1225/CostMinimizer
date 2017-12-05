@@ -24,7 +24,7 @@ public class Tools {
         return -1;//w grafie nie istnieje krawęd łącząca dwa punkty
     }
 
-    public int obliczSume() {
+    public int returnSumOfCosts() {
         int liczbaFerm = matrixConstraints.getRowNumber();
         int licbaSklepow = matrixConstraints.getColumnNumber();
         int suma = 0;
@@ -43,5 +43,13 @@ public class Tools {
         for (Graph g : residualGraph) {
             System.out.println(g.getFrom() + " -> " + g.getTo() + "  przepływ:" + g.getFlow() + "  koszt:" + g.getCost());
         }
+    }
+
+    public String returnStringResidualGraph() {
+        StringBuilder sb = new StringBuilder();
+        for (Graph g : residualGraph) {
+            sb.append(g.getFrom() + " -> " + g.getTo() + "  przepływ:" + g.getFlow() + "  koszt:" + g.getCost() + "\n");
+        }
+        return sb.toString();
     }
 }

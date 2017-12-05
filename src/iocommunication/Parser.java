@@ -8,6 +8,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 import dynamicstructures.Matrix;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 
 /**
  *
@@ -137,7 +139,8 @@ public class Parser {
 
     public boolean validateFile() throws FileNotFoundException, IOException {
         String line = "";
-        BufferedReader br = new BufferedReader(new FileReader(filename));
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "UTF-8"));
+
         Scanner sc = null;
         int linenumber = 0;
 
@@ -157,6 +160,7 @@ public class Parser {
         int dailyProduction = 0;
         //# Fermy drobiu (id | nazwa | dzienna produkcja)
         while (((line = br.readLine()) != null) && (!(line.replaceAll("\\s", "").charAt(0) == '#'))) {
+            //System.out.println(line);
             linenumber++;
             idFerm = 0;
             nameFerm = "";

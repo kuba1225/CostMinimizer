@@ -29,15 +29,16 @@ public class CostMinimizer {
     }
 
     public void minimizeCost(String filename) throws FileNotFoundException, IOException, NumberFormatException {
-        CostMinimizer c = new CostMinimizer();
         Parser r = new Parser(filename);
 
         r.readFile();
 
         EdmondsKarpAlgorithm e = new EdmondsKarpAlgorithm();
         e.edmondsKarp();
+
         BellmanFordAlgorithm bf = new BellmanFordAlgorithm();
         bf.bellmanFordAlgorithm();
+
         while (!bf.bellmanFordAlgorithm()) {
             bf.usunUjemnyCykl();
         }

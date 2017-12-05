@@ -34,7 +34,7 @@ public class Writer {
                 }
             }
         }
-        System.out.println("\nCałkowita suma kosztów: " + t.obliczSume() + " $\n");
+        System.out.println("\nCałkowita suma kosztów: " + t.returnSumOfCosts() + " $\n");
     }
 
     public void writeResultsToFile(String nazwaPliku) throws FileNotFoundException {
@@ -60,7 +60,7 @@ public class Writer {
                 }
             }
         }
-        p.println("\nCałkowita suma kosztów: " + t.obliczSume() + " $\n");
+        p.println("\nCałkowita suma kosztów: " + t.returnSumOfCosts() + " $\n");
         p.close();
     }
 
