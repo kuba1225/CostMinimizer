@@ -39,6 +39,21 @@ public class Tools {
         return suma;
     }
 
+    public int returnEggNumber() {
+        int liczbaFerm = matrixConstraints.getRowNumber();
+        int licbaSklepow = matrixConstraints.getColumnNumber();
+        int suma = 0;
+
+        for (int i = liczbaFerm + 1; i <= licbaSklepow + liczbaFerm; i++) {
+            for (int j = 1; j <= liczbaFerm; j++) {
+                if (getNumberOfEdgeInResidualGraph(i, j) != -1) {
+                    suma += abs(residualGraph.get(getNumberOfEdgeInResidualGraph(i, j)).getFlow());
+                }
+            }
+        }
+        return suma;
+    }
+
     public void writeResidualGraph() {
         for (Graph g : residualGraph) {
             System.out.println(g.getFrom() + " -> " + g.getTo() + "  przepływ:" + g.getFlow() + "  koszt:" + g.getCost());

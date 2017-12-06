@@ -1,6 +1,7 @@
 package algorithms;
 
 import static costminimizer.CostMinimizer.*;
+import costminimizer.Tools;
 import dynamicstructures.*;
 import static java.lang.Math.abs;
 import java.util.ArrayList;
@@ -64,7 +65,7 @@ public class BellmanFordAlgorithm {
 
         //1.przeszukiwanie grafu w obrebie cyklu ujemnego w celu znalezienia najmniejszego przepływu
         for (int i = 0; i < negativeCycle.size() - 1; i++) {
-            for (int j = 0; j < edges; j++) {
+            for (int j = 0; j < residualGraph.size(); j++) {
                 x = residualGraph.get(j).getFrom();
                 y = residualGraph.get(j).getTo();
                 if (x == negativeCycle.get(i) && y == negativeCycle.get(i + 1)) {
@@ -76,24 +77,35 @@ public class BellmanFordAlgorithm {
         }
 
         minFlow = findMin(cycleFlowTab);
-
+        //System.out.println("minflow = " + minFlow);
         //2.w zaleznosci w ktora strone cyklu przechodzi się, należy dodać lub odejąć znalezioną najnizszą wartość przepływu
         ArrayList<Graph> tmpResidualGraph = new ArrayList<>();
         int flowConstraint;
-        boolean wstawionoUjemyCykl;
+        Tools tt = new Tools();
         boolean test = true;
 
+        //writeNegativeCycle();
+        //System.out.println("Suma kosztów to : " + tt.returnSumOfCosts());
+        //System.out.println("Liczba wysłanych jajek to : " + tt.returnEggNumber());
         if (minFlow > 0) {
+
             for (int j = 0; j < residualGraph.size(); j++) {
                 x = residualGraph.get(j).getFrom();
                 y = residualGraph.get(j).getTo();
                 f = residualGraph.get(j).getFlow();
                 c = residualGraph.get(j).getCost();
-                wstawionoUjemyCykl = false;
-
+                test = true;
                 for (int i = 0; i < negativeCycle.size() - 1; i++) {
-                    if (negativeCycle.get(i) == x && negativeCycle.get(i + 1) == y) {
-                        wstawionoUjemyCykl = true;
+                    if (negativeCycle.get(i) == x && negativeCycle.get(i + 1) == y) {//przypadek 3
+                        for (int xx = j + 1; xx < residualGraph.size(); xx++) {
+                            int from = residualGraph.get(j).getFrom();
+                            int to = residualGraph.get(j).getTo();
+
+                            if (from == y && to == x) {
+                                residualGraph.remove(xx);
+                            }
+                        }
+
                         if (y > x) {//przechodzimy w grafie w prawo (dodatnie części cyklu)
                             if (x == 0) {
                                 flowConstraint = (int) matrixFermsNumberEggs.get(y - 1, 0);
@@ -113,10 +125,6 @@ public class BellmanFordAlgorithm {
                                     tmpResidualGraph.add(new Graph(y, x, (flowConstraint - f + minFlow), -(abs(c))));
                                 }
                             }
-                            if (f != 0 && f != flowConstraint && test) {
-                                j++;
-                            }
-                            test = true;
                         } else if (x > y) {//przechodzimy w grafie w lewo (ujemne części cyklu)
                             if (y == 0) {
                                 flowConstraint = (int) matrixFermsNumberEggs.get(x - 1, 0);
@@ -136,21 +144,23 @@ public class BellmanFordAlgorithm {
                                     tmpResidualGraph.add(new Graph(y, x, flowConstraint - (f - minFlow), abs(c)));
                                 }
                             }
-                            if (f != 0 && f != flowConstraint && test) {
-                                j++;
-                            }
-                            test = true;
                         }
-                    } else if (negativeCycle.get(i) == y && negativeCycle.get(i + 1) == x) {
-                        wstawionoUjemyCykl = true;
                         test = false;
+                        break;
+                    } else if (negativeCycle.get(i) == y && negativeCycle.get(i + 1) == x) {//przypadek 2
+                        residualGraph.remove(j);
+                        j--;
+                        test = false;
+                        break;
                     }
                 }
-                if (!wstawionoUjemyCykl) {
+                if (test) {//przypadek 3
                     tmpResidualGraph.add(residualGraph.get(j));
-                }
 
+                }
             }
+            //tt.writeResidualGraph();
+            //writeNegativeCycle();
 
             //3.zamiana grafu oryginalnego z tymczasowym
             residualGraph.clear();
@@ -219,21 +229,23 @@ public class BellmanFordAlgorithm {
         negativeCycle.add(poprzednik);
         Collections.reverse(negativeCycle);
 
+        ArrayList<Integer> tmpnegativeCycle = new ArrayList<Integer>();
+
         int st = negativeCycle.get(0);
+        tmpnegativeCycle.add(st);
+        int x;
 
-        int rozmiar;
-
-        for (rozmiar = 1; rozmiar < negativeCycle.size(); rozmiar++) {
-            if (negativeCycle.get(rozmiar) == st) {
+        for (int i = 1; i < negativeCycle.size(); i++) {
+            x = negativeCycle.get(i);
+            if (x == st) {
                 break;//upewniamy się że cykl ujemny jest zamknięty
+            } else {
+                tmpnegativeCycle.add(x);
             }
         }
+        tmpnegativeCycle.add(st);
 
-        rozmiar++;
-
-        for (; rozmiar < negativeCycle.size(); rozmiar++) {
-            negativeCycle.remove(rozmiar);//usuwamy z cyklu wszystkie krawędzie które są poza jego ,,zamknięciem''
-        }
+        negativeCycle = tmpnegativeCycle;
     }
 
     private int findMin(int[] x) {

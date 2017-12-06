@@ -70,7 +70,6 @@ public class Parser {
             fermKey++;
         }
 
-        //System.out.println("sumOfDailyProduction = " + sumOfDailyProduction);
         int x = 0;
         int idShop = 0;
         String nameShop = "";
