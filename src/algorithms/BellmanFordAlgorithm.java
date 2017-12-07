@@ -167,7 +167,7 @@ public class BellmanFordAlgorithm {
             residualGraph = tmpResidualGraph;
 
             //System.out.println("Suma całkowita kosztów to: " + obliczSume() + " $");
-            System.out.println("Całkowita liczba wysłanych jaj to: " + tt.returnEggNumber());
+            //System.out.println("Całkowita liczba wysłanych jaj to: " + tt.returnEggNumber());
         }
     }
 
