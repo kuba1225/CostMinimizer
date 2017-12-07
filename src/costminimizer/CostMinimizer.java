@@ -37,7 +37,7 @@ public class CostMinimizer {
         e.edmondsKarp();
 
         BellmanFordAlgorithm bf = new BellmanFordAlgorithm();
-        bf.bellmanFordAlgorithm();
+        //bf.bellmanFordAlgorithm();
 
         while (!bf.bellmanFordAlgorithm()) {
             bf.usunUjemnyCykl();

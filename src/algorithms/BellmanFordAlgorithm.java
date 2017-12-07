@@ -13,7 +13,7 @@ public class BellmanFordAlgorithm {
     ArrayList<Integer> negativeCycle = new ArrayList<>();
 
     private int edges, verticles;                           //liczba krawędzi i wierzchołków grafu
-    private verticleElement[] A;                            //tablica list sąsiedztwa
+    private verticleElement[] neighboursArray;              //tablica list sąsiedztwa
     private int[] previousElementArray;                     //tablica poprzedników
     private long[] costArray;                               //tablicza kosztów dojścia do wierzchołków
 
@@ -31,14 +31,14 @@ public class BellmanFordAlgorithm {
         verticles = matrixConstraints.getColumnNumber() + matrixConstraints.getRowNumber() + 2;
         edges = residualGraph.size();
 
-        A = new verticleElement[verticles];             //tablica list sąsiedztwa
+        neighboursArray = new verticleElement[verticles];             //tablica list sąsiedztwa
         costArray = new long[verticles];                //tablicza kosztów dojścia do wierzchołków
         previousElementArray = new int[verticles];      //tablica poprzedników
 
         for (int i = 0; i < verticles; i++) {
             costArray[i] = MAXINT;
             previousElementArray[i] = -1;//-1 oznacza, że element nie został jeszcze odwiedzony
-            A[i] = null;
+            neighboursArray[i] = null;
         }
 
         //~~~~~~~~~~~~~~~~~~~~~~~~~~WCZYTYWANIE DANYCH~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -50,8 +50,8 @@ public class BellmanFordAlgorithm {
             pv = new verticleElement();
             pv.nextVerticle = y;
             pv.cost = w;
-            pv.next = A[x];
-            A[x] = pv;
+            pv.next = neighboursArray[x];
+            neighboursArray[x] = pv;
         }
 
         return bellmanFord(0);
@@ -167,6 +167,7 @@ public class BellmanFordAlgorithm {
             residualGraph = tmpResidualGraph;
 
             //System.out.println("Suma całkowita kosztów to: " + obliczSume() + " $");
+            System.out.println("Całkowita liczba wysłanych jaj to: " + tt.returnEggNumber());
         }
     }
 
@@ -179,7 +180,7 @@ public class BellmanFordAlgorithm {
         for (i = 1; i < verticles; i++) {
             noChanges = true;//brak zmian w tablicach kosztów i poprzedników
             for (x = 0; x < verticles; x++) {
-                for (pv = A[x]; pv != null; pv = pv.next)//przechodzimy po wszystkich sąsiadach listy wierzchołka x
+                for (pv = neighboursArray[x]; pv != null; pv = pv.next)//przechodzimy po wszystkich sąsiadach listy wierzchołka x
                 {
                     if (costArray[pv.nextVerticle] > costArray[x] + pv.cost)//warunek relaksacji
                     {
@@ -196,10 +197,10 @@ public class BellmanFordAlgorithm {
 
         // Sprawdzamy istnienie ujemnego cyklu
         for (x = 0; x < verticles; x++) {
-            for (pv = A[x]; pv != null; pv = pv.next) {
+            for (pv = neighboursArray[x]; pv != null; pv = pv.next) {
                 if (costArray[pv.nextVerticle] > costArray[x] + pv.cost) {//sprawdzamy czy istnieją krawędzie nie spełniające warunku relaksacji
                     //wypisz_ujemny_cykl(A, pv, d);
-                    findNegativeCycle(pv.nextVerticle);
+                    findNegativeCycle(x);
                     return false; //false oznacza znalezienie ujemnego cyklu
                 }
             }

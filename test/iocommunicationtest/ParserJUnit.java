@@ -23,6 +23,7 @@ public class ParserJUnit {
             p.readFile();
         } catch (NumberFormatException e) {
             assertEquals("NIEUDANA WALIDACJA PLIKU: Nieudana próba odczytu w linii 1 > Pierwsza linia pliku nie zaczyna się od znaku \"#\"!", e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
@@ -34,6 +35,7 @@ public class ParserJUnit {
             pd.validateFile();
         } catch (NumberFormatException e) {
             assertEquals("NIEUDANA WALIDACJA PLIKU: Nie uwzględniono wszystkich połączeń pomiędzy fermami a sklepami", e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
@@ -45,6 +47,7 @@ public class ParserJUnit {
             p.readFile();
         } catch (NumberFormatException e) {
             assertEquals("NIEUDANA WALIDACJA PLIKU: Nieudana próba odczytu w linii 13 > Podano ujemny koszt przewozu jednego jaja", e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
@@ -55,6 +58,7 @@ public class ParserJUnit {
             p.readFile();
         } catch (NumberFormatException e) {
             assertEquals("NIEUDANA WALIDACJA PLIKU: Nieudana próba odczytu w linii 13 > Podano ujemną maksymalną liczbę jaj", e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
@@ -65,6 +69,7 @@ public class ParserJUnit {
             p.readFile();
         } catch (NumberFormatException e) {
             assertEquals("NIEUDANA WALIDACJA PLIKU: Nieudana próba odczytu w linii 3 > Podano ujemna dzienną produkcję", e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
@@ -75,6 +80,7 @@ public class ParserJUnit {
             p.readFile();
         } catch (NumberFormatException e) {
             assertEquals("NIEUDANA WALIDACJA PLIKU: Nieudana próba odczytu w linii 7 > Podano ujemne dzienne zapotrzebowanie", e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
@@ -85,6 +91,7 @@ public class ParserJUnit {
             p.readFile();
         } catch (NumberFormatException e) {
             assertEquals("NIEUDANA WALIDACJA PLIKU: Nieudana próba odczytu w linii 3 > Nie podano dziennej produkcji fermy", e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
@@ -95,6 +102,7 @@ public class ParserJUnit {
             p.readFile();
         } catch (NumberFormatException e) {
             assertEquals("NIEUDANA WALIDACJA PLIKU: Nieudana próba odczytu w linii 3 > Nie podano numeru id fermy", e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
@@ -105,6 +113,7 @@ public class ParserJUnit {
             p.readFile();
         } catch (NumberFormatException e) {
             assertEquals("NIEUDANA WALIDACJA PLIKU: Nieudana próba odczytu w linii 3 > Nie podano nazwy fermy", e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
@@ -115,6 +124,7 @@ public class ParserJUnit {
             p.readFile();
         } catch (NumberFormatException e) {
             assertEquals("NIEUDANA WALIDACJA PLIKU: Nieudana próba odczytu w linii 7 > Nie podano dziennego zapotrzebowania sklepu", e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
@@ -125,6 +135,7 @@ public class ParserJUnit {
             p.readFile();
         } catch (NumberFormatException e) {
             assertEquals("NIEUDANA WALIDACJA PLIKU: Nieudana próba odczytu w linii 7 > Nie podano numeru id sklepu", e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
@@ -135,6 +146,7 @@ public class ParserJUnit {
             p.readFile();
         } catch (NumberFormatException e) {
             assertEquals("NIEUDANA WALIDACJA PLIKU: Nieudana próba odczytu w linii 8 > Nie podano nazwy sklepu", e.getMessage());
+            System.out.println(e.getMessage());
         }
     }
 
